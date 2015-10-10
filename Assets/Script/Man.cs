@@ -122,7 +122,7 @@ public class Man : MonoBehaviour {
 		else
 			horizontal = 0;
 
-		rb2D.AddForce(new Vector2(horizontal * 15f, vertical * 15f), ForceMode2D.Force);
+		rb2D.AddForce(new Vector2(horizontal * 30f, vertical * 30f), ForceMode2D.Force);
 
 		if (rb2D.velocity.SqrMagnitude() > useV) {
 			rb2D.velocity *= (useV / rb2D.velocity.SqrMagnitude());

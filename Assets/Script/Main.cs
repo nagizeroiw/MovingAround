@@ -68,10 +68,10 @@ public class Main : MonoBehaviour {
 		text.text = score2.ToString() + " : " + score1.ToString();
 		ball.SetActive(true);
 		if (losenumber == 1) {
-			ball.GetComponent<Rigidbody2D>().velocity = new Vector3(-2f, 0f, 0f);
+			ball.GetComponent<Rigidbody2D>().velocity = new Vector3(-1.5f, 0f, 0f);
 		}
 		else if (losenumber == 2) {
-			ball.GetComponent<Rigidbody2D>().velocity = new Vector3(2f, 0f, 0f);
+			ball.GetComponent<Rigidbody2D>().velocity = new Vector3(1.5f, 0f, 0f);
 		}
 		foreach (Man player in players) {
 			player.Wake();
