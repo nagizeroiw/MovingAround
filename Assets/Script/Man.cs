@@ -5,12 +5,11 @@ using System.Collections;
 
 public class Man : MonoBehaviour {
 
-	public float V = 5f;
+	public float maxV = 8f;
 	public int number;
 
 	private Animator animator;
-
-	private float vX, vY;
+	
 	private Rigidbody2D rb2D;
 	
 	private Text mySkillBoard;
@@ -36,7 +35,6 @@ public class Man : MonoBehaviour {
 	// Use this for initialization
 	void Start () {
 		animator = GetComponent<Animator>();
-		vX = vY = 0;
 		rb2D = this.GetComponent<Rigidbody2D>();
 		state = STATE.NORMAL;
 
@@ -102,11 +100,11 @@ public class Man : MonoBehaviour {
 
 		// dash
 
-		float useV = V;
+		float useV = maxV;
 		if (skills[0].IsOn()) // dash
-			useV *= 1.2f;
+			useV *= 2f;
 
-		// get vx and vy
+		// get ax and ay
 
 		int horizontal = 0, vertical = 0;
 
@@ -123,24 +121,21 @@ public class Man : MonoBehaviour {
 			horizontal = -1;
 		else
 			horizontal = 0;
-		
-		vX = horizontal * useV;
-		vY = vertical * useV;
+
+		rb2D.AddForce(new Vector2(horizontal * 15f, vertical * 15f), ForceMode2D.Force);
+
+		if (rb2D.velocity.SqrMagnitude() > useV) {
+			rb2D.velocity *= (useV / rb2D.velocity.SqrMagnitude());
+        }
 
 		// state detect
 
-		if ((vX < float.Epsilon) && (vY < float.Epsilon)) {
+		if (rb2D.velocity.SqrMagnitude() == 0f) {
 			state = STATE.NORMAL;
 		}
 		else {
 			state = STATE.MOVING;
 		}
-
-		// movement
-
-		float dx = vX * Time.deltaTime, dy = vY * Time.deltaTime;
-		rb2D.MovePosition(transform.position + new Vector3(dx, dy, 0));
-
 		// end
 	}
 
@@ -154,12 +149,7 @@ public class Man : MonoBehaviour {
 
 			state = STATE.EATING;
 
-			
-
 			// UnityEngine.Debug.Log(lastSize.ToString());
-
-			
-
 			if (transform.localScale.x < 1.5f) { // if not so strong
 
 				Destroy(c2D.gameObject);
@@ -171,7 +161,7 @@ public class Man : MonoBehaviour {
 				lastSize.z += c2D.gameObject.transform.localScale.z / 2;
 
 				rb2D.mass += rb2D.mass * (c2D.gameObject.transform.localScale.z / lastSize.z);
-				V -= V * (c2D.gameObject.transform.localScale.z / lastSize.z) / 3;
+				maxV -= maxV * (c2D.gameObject.transform.localScale.z / lastSize.z) / 3;
 				// UnityEngine.Debug.Log(lastSize.ToString());
 
 				transform.localScale = lastSize;

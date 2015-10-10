@@ -14,6 +14,9 @@ public class MagnetSkill : Skill {
 	public override void Use(int number) {
 		base.Use(number);
 		Vector3 manpos = GameObject.FindGameObjectWithTag(playerName[number]).transform.position;
+		manpos.x += 0.4f * GameObject.FindGameObjectWithTag(playerName[number]).GetComponent<Rigidbody2D>().velocity.x;
+		manpos.y += 0.4f * GameObject.FindGameObjectWithTag(playerName[number]).GetComponent<Rigidbody2D>().velocity.y;
+
 		magInstance = GameObject.Instantiate(Main.instance.magnet, manpos, Quaternion.identity) as Magnet;
 	}
 
