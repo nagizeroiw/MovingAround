@@ -9,17 +9,17 @@ Two skills are learnt by both players. "Dash" will multipy your speed limit by 2
 
 ## Controls
 
-	### Player 1:
+### Player 1:
 
-	- move: axis keys
-	- Dash: comma(',')
-	- Magnet: period('.')
+- move: axis keys
+- Dash: comma(',')
+- Magnet: period('.')
 
-	### Player 2:
+### Player 2:
 
-	- move: WASD
-	- Dash: X
-	- Magnet: C
+- move: WASD
+- Dash: X
+- Magnet: C
 
 ## Demo play
 
