@@ -23,4 +23,5 @@ Two skills are learnt by both players. "Dash" will multipy your speed limit by 2
 
 ## Demo play
 
-![demo play](https://raw.githubusercontent.com/398607/MovingAround/master/demoplay.gif)
+![dash](https://raw.githubusercontent.com/398607/MovingAround/master/dashdemo.gif)
+![magnet](https://raw.githubusercontent.com/398607/MovingAround/master/magnetdemo.gif)
