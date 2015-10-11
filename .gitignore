@@ -10,6 +10,8 @@
 /Library
 /obj
 /Temp
+/MovingAround*
+/PSSource
 
 # ===================================== #
 # Visual Studio / MonoDevelop generated #
@@ -17,6 +19,7 @@
 ExportedObj/
 obj/
 *.svd
+*pdb
 *.userprefs
 /*.csproj
 *.pidb
