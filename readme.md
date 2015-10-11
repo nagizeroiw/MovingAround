@@ -17,12 +17,22 @@ Two skills are learnt by both players. "Dash" will multipy your speed limit by 2
 ### Player 2:
 
 - move: WASD
-- Dash: X
-- Magnet: C
+- Dash: 1 (above alphabet keys)
+- Magnet: 2 (above alphabet keys)
 
 ## Update log
 
-### ver 1.1
+### ver 1.1.1
+
+- Ball Linear Drag: 0.01 -> 0.5
+
+Make it easier for the ball to speed down.
+
+- Control of Player 2 changed.
+
+- Field Edge collider changed slightly.
+
+### ver 1.1.0
 
 - Human running maximum speed: 12 -> 15
 

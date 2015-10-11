@@ -1,0 +1,13 @@
+fileFormatVersion: 2
+guid: d15536dd1c3fd4f4d98119aa2562e48a
+timeCreated: 1444480379
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - magPrefab: {fileID: 11451234, guid: b4b7d0224c8693b43b26a53a6689c40b, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

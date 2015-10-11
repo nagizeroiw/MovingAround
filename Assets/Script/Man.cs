@@ -20,8 +20,8 @@ public class Man : MonoBehaviour {
 
 	// 0: Dash 1: magnet
 	private Skill[] skills;
-	private static KeyCode[][] skillTile = { new KeyCode[] { KeyCode.L, KeyCode.Comma,  KeyCode.X }, // Dash 
-											 new KeyCode[] { KeyCode.L, KeyCode.Period, KeyCode.C } }; // Magnet
+	private static KeyCode[][] skillTile = { new KeyCode[] { KeyCode.L, KeyCode.Comma,  KeyCode.Alpha1 }, // Dash 
+											 new KeyCode[] { KeyCode.L, KeyCode.Period, KeyCode.Alpha2 } }; // Magnet
 	private static string[] textBoardName = { "", "Dash1", "Dash2"};
 
 	private enum STATE {
