@@ -38,7 +38,7 @@ public class Man : MonoBehaviour {
 		rb2D = this.GetComponent<Rigidbody2D>();
 		state = STATE.NORMAL;
 
-		Skill dash = new Skill("Dash", 30f, 5f);
+		Skill dash = new Skill("Dash", 20f, 2f);
 		Skill magnet = new MagnetSkill();
 		skills = new Skill[] { dash, magnet};
 
@@ -139,6 +139,7 @@ public class Man : MonoBehaviour {
 		// end
 	}
 
+	// eat food. Now with no use
 	void OnCollisionEnter2D(Collision2D c2D) {
 
 		// UnityEngine.Debug.Log("Collision!");

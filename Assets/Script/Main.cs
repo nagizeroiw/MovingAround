@@ -53,19 +53,25 @@ public class Main : MonoBehaviour {
 
 	private IEnumerator Countdown(int losenumber) {
 
+		// let players wait
 		foreach (Man player in players) {
 			player.GetComponent<Rigidbody2D>().velocity = new Vector3(0f, 0f, 0f);
 			player.Wait();
 		}
 
+		// remove the ball
 		ball.SetActive(false);
-		text.text = "3";
+
+		// count down when pausing
+		text.text = score2.ToString() + " : " + score1.ToString() + "\n3";
 		yield return new WaitForSeconds(1f);
-		text.text = "2";
+		text.text = score2.ToString() + " : " + score1.ToString() + "\n2";
 		yield return new WaitForSeconds(1f);
-		text.text = "1";
+		text.text = score2.ToString() + " : " + score1.ToString() + "\n1";
 		yield return new WaitForSeconds(1f);
 		text.text = score2.ToString() + " : " + score1.ToString();
+
+		// push back the ball with velocity
 		ball.SetActive(true);
 		if (losenumber == 1) {
 			ball.GetComponent<Rigidbody2D>().velocity = new Vector3(-1.5f, 0f, 0f);
@@ -73,6 +79,8 @@ public class Main : MonoBehaviour {
 		else if (losenumber == 2) {
 			ball.GetComponent<Rigidbody2D>().velocity = new Vector3(1.5f, 0f, 0f);
 		}
+
+		// wake up players
 		foreach (Man player in players) {
 			player.Wake();
 		}
