@@ -22,20 +22,20 @@ public class Skill {
 		_maxTime = maxTime;
 	}
 
-	public bool IsOn() {
+	public virtual bool IsOn() {
 		return _time > 0f;
 	}
 
-	public bool Avalible() {
+	public virtual bool Avalible() {
 		return _CD == 0f;
 	}
 
-	public void Init() {
+	public virtual void Init() {
 		SetCD(0f);
 		SetTime(0f);
 	}
 
-	public virtual void Use(int number = 0) {
+	public virtual void Use() {
 		SetCD(_maxCD);
 		SetTime(_maxTime);
 	}
@@ -44,7 +44,7 @@ public class Skill {
 
 	}
 
-	public bool Update() {
+	public virtual bool Update() {
 		float fakeTime = _time;
 		SetCD(_CD - Time.deltaTime);
 		SetTime(_time - Time.deltaTime);
@@ -70,7 +70,7 @@ public class Skill {
 		AdjustDisplay();
 	}
 
-	private void AdjustDisplay() {
+	protected virtual void AdjustDisplay() {
 		_display = _name + "(" + Mathf.CeilToInt(_CD) + "): " + Mathf.CeilToInt(_time);
 	}
 }

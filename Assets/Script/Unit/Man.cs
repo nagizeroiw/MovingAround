@@ -2,7 +2,6 @@
 using UnityEngine.UI;
 using System.Collections;
 
-
 public class Man : MonoBehaviour {
 
 	public float maxV = 8f;
@@ -13,16 +12,11 @@ public class Man : MonoBehaviour {
 	private Rigidbody2D rb2D;
 	
 	private Text mySkillBoard;
-
-	private static KeyCode[] axis1 = { KeyCode.UpArrow, KeyCode.DownArrow, KeyCode.RightArrow, KeyCode.LeftArrow };
-	private static KeyCode[] axis2 = { KeyCode.W,       KeyCode.S,         KeyCode.D,          KeyCode.A         };
-	private static KeyCode[][] axis = { new KeyCode[]{ }, axis1, axis2 };
-
 	// 0: Dash 1: magnet
 	private Skill[] skills;
-	private static KeyCode[][] skillTile = { new KeyCode[] { KeyCode.L, KeyCode.Comma,  KeyCode.Alpha1 }, // Dash 
-											 new KeyCode[] { KeyCode.L, KeyCode.Period, KeyCode.Alpha2 } }; // Magnet
 	private static string[] textBoardName = { "", "Dash1", "Dash2"};
+
+	private CommandHolder cmdHolder;
 
 	private enum STATE {
 		NORMAL,
@@ -39,7 +33,7 @@ public class Man : MonoBehaviour {
 		state = STATE.NORMAL;
 
 		Skill dash = new Skill("Dash", 20f, 2f);
-		Skill magnet = new MagnetSkill();
+		Skill magnet = new MagnetSkill(number);
 		skills = new Skill[] { dash, magnet};
 
 		mySkillBoard = GameObject.Find(textBoardName[number]).GetComponent<Text>(); ;
@@ -48,13 +42,21 @@ public class Man : MonoBehaviour {
 			skl.Init();
 		}
 
+		cmdHolder = new CommandHolderKeyboard(number);
+
 	}
 	
 	// Update is called once per frame
 	void Update () {
 		
 		if (state != STATE.WAITING) { // can`t move when waiting
+
+			// get commands from player
+			cmdHolder.GiveAllCommands();
+
 			UpdateSkills(); // when waiting, skill parameters freeze
+			
+			// handle move and skill commands
 			Move();
 			Skills();
 		}
@@ -70,19 +72,22 @@ public class Man : MonoBehaviour {
 	}
 
 	private void Skills() {
-		for (int i = 0; i < skills.Length; i++) {
-			if (Input.GetKey(skillTile[i][number]) && skills[i].Avalible()) {
-				// activate
-				skills[i].Use(number);
-				animator.SetInteger("skillState", i);
-			}
+		int sklCmd = cmdHolder.GetSkillCmd();
+
+		// activate the skill if avalible
+		if (sklCmd != -1 && skills[sklCmd].Avalible()) {
+			animator.SetInteger("skillState", sklCmd);
+			skills[sklCmd].Use();
 		}
+
 		AdjustSkillBoard();
 	}
 
 	private void UpdateSkills() {
 		// update dash
 		foreach (Skill skl in skills) {
+			
+			// if an skill ends, turn the animator to normal state
 			if (skl.Update())
 				animator.SetInteger("skillState", -1);
 		}
@@ -99,31 +104,18 @@ public class Man : MonoBehaviour {
 	private void Move() {
 
 		// dash
-
 		float useV = maxV;
 		if (skills[0].IsOn()) // dash
 			useV *= 2f;
 
 		// get ax and ay
+		Vector2 axis = cmdHolder.GetAxisCmd();
+		float horizontal = axis.x, vertical = axis.y;
 
-		int horizontal = 0, vertical = 0;
-
-		if (Input.GetKey(axis[number][0]))
-			vertical = 1;
-		else if (Input.GetKey(axis[number][1]))
-			vertical = -1;
-		else
-			vertical = 0;
-
-		if (Input.GetKey(axis[number][2]))
-			horizontal = 1;
-		else if (Input.GetKey(axis[number][3]))
-			horizontal = -1;
-		else
-			horizontal = 0;
-
+		// give force
 		rb2D.AddForce(new Vector2(horizontal * 30f, vertical * 30f), ForceMode2D.Force);
 
+		// limitation on speed
 		if (rb2D.velocity.SqrMagnitude() > useV) {
 			rb2D.velocity *= (useV / rb2D.velocity.SqrMagnitude());
         }
