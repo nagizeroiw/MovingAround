@@ -12,9 +12,9 @@ public class Man : MonoBehaviour {
 	private Rigidbody2D rb2D;
 	
 	private Text mySkillBoard;
-	// 0: Dash 1: magnet
+	private static string[] textBoardName = { "", "Dash1", "Dash2" };
+	
 	private Skill[] skills;
-	private static string[] textBoardName = { "", "Dash1", "Dash2"};
 
 	private CommandHolder cmdHolder;
 
@@ -28,20 +28,27 @@ public class Man : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
+		
+		// get animator, rb
 		animator = GetComponent<Animator>();
 		rb2D = this.GetComponent<Rigidbody2D>();
+
+		// init state
 		state = STATE.NORMAL;
 
-		Skill dash = new Skill("Dash", 20f, 2f);
+		// init skills
+		Skill dash = new DashSkill();
 		Skill magnet = new MagnetSkill(number);
-		skills = new Skill[] { dash, magnet};
+		skills = new Skill[] { dash, magnet };
 
-		mySkillBoard = GameObject.Find(textBoardName[number]).GetComponent<Text>(); ;
-
-		foreach(Skill skl in skills) {
+		foreach (Skill skl in skills) {
 			skl.Init();
 		}
 
+		// get skill board
+		mySkillBoard = GameObject.Find(textBoardName[number]).GetComponent<Text>();
+
+		// init cmdHolder
 		cmdHolder = new CommandHolderKeyboard(number);
 
 	}
@@ -53,8 +60,9 @@ public class Man : MonoBehaviour {
 
 			// get commands from player
 			cmdHolder.GiveAllCommands();
-
-			UpdateSkills(); // when waiting, skill parameters freeze
+			
+			// get all skills updated: cd and time
+			UpdateSkills(); 
 			
 			// handle move and skill commands
 			Move();
@@ -62,15 +70,18 @@ public class Man : MonoBehaviour {
 		}
 	}
 
+	// set state to waiting
 	public void Wait() {
 		state = STATE.WAITING;
 	}
 
+	// set state to normal
 	public void Wake() {
 		if (state == STATE.WAITING)
 			state = STATE.NORMAL;
 	}
 
+	// handle skill commands
 	private void Skills() {
 		int sklCmd = cmdHolder.GetSkillCmd();
 
@@ -83,6 +94,7 @@ public class Man : MonoBehaviour {
 		AdjustSkillBoard();
 	}
 
+	// update skills: cd and time
 	private void UpdateSkills() {
 		// update dash
 		foreach (Skill skl in skills) {
@@ -94,6 +106,7 @@ public class Man : MonoBehaviour {
 		AdjustSkillBoard();
 	}
 	
+	// adjust display on skill board
 	private void AdjustSkillBoard() {
 		mySkillBoard.text = "";
         foreach (Skill skl in skills) {
@@ -101,9 +114,10 @@ public class Man : MonoBehaviour {
 		}
 	}
 
+	// handle move commands
 	private void Move() {
 
-		// dash
+		// dash, maybe it`s better to pull this out?
 		float useV = maxV;
 		if (skills[0].IsOn()) // dash
 			useV *= 2f;
@@ -121,17 +135,17 @@ public class Man : MonoBehaviour {
         }
 
 		// state detect
-
 		if (rb2D.velocity.SqrMagnitude() == 0f) {
 			state = STATE.NORMAL;
 		}
 		else {
 			state = STATE.MOVING;
 		}
+
 		// end
 	}
 
-	// eat food. Now with no use
+	// eat food. Now no use
 	void OnCollisionEnter2D(Collision2D c2D) {
 
 		// UnityEngine.Debug.Log("Collision!");
