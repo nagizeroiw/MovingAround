@@ -9,19 +9,25 @@ public class Main : MonoBehaviour {
 	[HideInInspector]
 	static public Main instance = null;
 
+	// for skill
 	public Magnet magnet;
+
+	// for food (now useless)
 	public GameObject foodTile;
 	public int newFoodTime;
 
+	// for item
+	public Item[] ItemTile;
+	public int newItemTime;
+
 	[HideInInspector]
 	public int score1, score2;
-
-	private int frameNumber;
+	
+	// find some units of the game
 	private GameObject ball;
 	private Text text;
 	private Man[] players;
 	
-
 	// Use this for initialization
 	void Start() {
 		if (instance == null)
@@ -34,6 +40,10 @@ public class Main : MonoBehaviour {
 		ball = GameObject.FindGameObjectWithTag("Ball");
 		text = GameObject.Find("Text").GetComponent<Text>();
 		players = FindObjectsOfType<Man>();
+
+		if (newItemTime != 0) {
+			StartCoroutine(CreateItem());
+		}
 	}
 
 	// when (1 - number) scored
@@ -51,6 +61,7 @@ public class Main : MonoBehaviour {
 		StartCoroutine(Countdown(number));
 	}
 
+	// when goal
 	private IEnumerator Countdown(int losenumber) {
 
 		// let players wait
@@ -88,16 +99,13 @@ public class Main : MonoBehaviour {
 		yield return null;
 	}
 
-	// Update is called once per frame
-	void Update() {
-		if (newFoodTime != 0) {
-			frameNumber++;
-			if (frameNumber % newFoodTime == 0) {
-				
-				Instantiate(foodTile, new Vector3(Random.Range(-9, 9), Random.Range(4, 5), 0f), Quaternion.identity);
-				Instantiate(foodTile, new Vector3(Random.Range(-9, 9), Random.Range(-5, -4), 0f), Quaternion.identity);
-			}
+	IEnumerator CreateItem() {
+		while (true) {
+			int i = Random.Range(0, ItemTile.Length - 1);
+
+			Instantiate(ItemTile[i], new Vector3(Random.Range(-9, 9), Random.Range(-1, 1), 0f), Quaternion.identity);
+
+			yield return new WaitForSeconds(newItemTime);
 		}
 	}
-	
 }

@@ -5,16 +5,19 @@ using System.Collections;
 public class Man : MonoBehaviour {
 
 	public float maxV = 8f;
+	public float A = 30f;
 	public int number;
 
 	private Animator animator;
 	
 	private Rigidbody2D rb2D;
 	
-	private Text mySkillBoard;
+	private Text myTextBoard;
 	private static string[] textBoardName = { "", "Dash1", "Dash2" };
 	
 	private Skill[] skills;
+
+	private Item item;
 
 	private CommandHolder cmdHolder;
 
@@ -45,8 +48,10 @@ public class Man : MonoBehaviour {
 			skl.Init();
 		}
 
+		item = null;
+
 		// get skill board
-		mySkillBoard = GameObject.Find(textBoardName[number]).GetComponent<Text>();
+		myTextBoard = GameObject.Find(textBoardName[number]).GetComponent<Text>();
 
 		// init cmdHolder
 		cmdHolder = new CommandHolderKeyboard(number);
@@ -66,7 +71,8 @@ public class Man : MonoBehaviour {
 			
 			// handle move and skill commands
 			Move();
-			Skills();
+			Skill();
+			Item();
 		}
 	}
 
@@ -82,7 +88,7 @@ public class Man : MonoBehaviour {
 	}
 
 	// handle skill commands
-	private void Skills() {
+	private void Skill() {
 		int sklCmd = cmdHolder.GetSkillCmd();
 
 		// activate the skill if avalible
@@ -91,7 +97,16 @@ public class Man : MonoBehaviour {
 			skills[sklCmd].Use();
 		}
 
-		AdjustSkillBoard();
+		AdjustTextBoard();
+	}
+
+	private void Item() {
+
+		// use item
+		if (cmdHolder.GetItemCmd() && item != null) {
+			item.Use();
+			item = null;
+		}
 	}
 
 	// update skills: cd and time
@@ -103,15 +118,22 @@ public class Man : MonoBehaviour {
 			if (skl.Update())
 				animator.SetInteger("skillState", -1);
 		}
-		AdjustSkillBoard();
+		AdjustTextBoard();
 	}
 	
 	// adjust display on skill board
-	private void AdjustSkillBoard() {
-		mySkillBoard.text = "";
+	private void AdjustTextBoard() {
+		myTextBoard.text = "";
         foreach (Skill skl in skills) {
-			mySkillBoard.text += skl._display + "\n";
+			myTextBoard.text += skl._display + "\n";
 		}
+		myTextBoard.text += "\n\n";
+        if (item != null) {
+			myTextBoard.text += item.GetType().ToString();
+        }
+		else {
+			myTextBoard.text += "No Item";
+        }
 	}
 
 	// handle move commands
@@ -120,14 +142,14 @@ public class Man : MonoBehaviour {
 		// dash, maybe it`s better to pull this out?
 		float useV = maxV;
 		if (skills[0].IsOn()) // dash
-			useV *= 2f;
+			useV *= 1.5f;
 
 		// get ax and ay
 		Vector2 axis = cmdHolder.GetAxisCmd();
 		float horizontal = axis.x, vertical = axis.y;
 
 		// give force
-		rb2D.AddForce(new Vector2(horizontal * 30f, vertical * 30f), ForceMode2D.Force);
+		rb2D.AddForce(new Vector2(horizontal * A, vertical * A), ForceMode2D.Force);
 
 		// limitation on speed
 		if (rb2D.velocity.SqrMagnitude() > useV) {
@@ -148,34 +170,19 @@ public class Man : MonoBehaviour {
 	// eat food. Now no use
 	void OnCollisionEnter2D(Collision2D c2D) {
 
-		// UnityEngine.Debug.Log("Collision!");
-		
-		// can eat at any time
+		// Debug.Log(c2D.gameObject.name +  " Collision!");
 
-		if (c2D.gameObject.CompareTag("Food")) { // eat food when not so big
-
-			state = STATE.EATING;
-
-			// UnityEngine.Debug.Log(lastSize.ToString());
-			if (transform.localScale.x < 1.5f) { // if not so strong
-
-				Destroy(c2D.gameObject);
-
-				Vector3 lastSize = transform.localScale;
-				
-				lastSize.x += c2D.gameObject.transform.localScale.x / 2;
-				lastSize.y += c2D.gameObject.transform.localScale.y / 2;
-				lastSize.z += c2D.gameObject.transform.localScale.z / 2;
-
-				rb2D.mass += rb2D.mass * (c2D.gameObject.transform.localScale.z / lastSize.z);
-				maxV -= maxV * (c2D.gameObject.transform.localScale.z / lastSize.z) / 3;
-				// UnityEngine.Debug.Log(lastSize.ToString());
-
-				transform.localScale = lastSize;
-			}
-
-			state = STATE.NORMAL;
-			
+		// get item
+		Item tmp = c2D.collider.gameObject.GetComponent<Item>();
+        if (tmp != null) {
+			tmp.GetComponent<Collider2D>().isTrigger = true;
+			// can only hold one Item
+			if (item == null) {
+				item = tmp;
+                item.SetOwner(this);
+				AdjustTextBoard();
+            }
 		}
+		
 	}
 }

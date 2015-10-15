@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+// this works! but why?
+[RequireComponent(typeof(Item))]
 public abstract class Item : MonoBehaviour {
 
 	public enum STATE {
@@ -9,37 +11,38 @@ public abstract class Item : MonoBehaviour {
 		IN_HAND,
 		USED
 	}
-
-	public string itemName;
+	
+	[HideInInspector]
 	public STATE state;
 
 	// when on ground
-	private float _maxLife;
-	private float _life;
+	protected float _maxLife;
+	protected float _life;
 
-	private Man _owner;
+	protected Man _owner;
 
 	public Item() {
-		itemName = "Unknown";
-		_life = _maxLife = 0f;
+		
+		_life = _maxLife = 20f;
 		state = STATE.ON_GROUND;
 		_owner = null;
-	}
-	
-	public Item(Man owner, string name) {
-
-		itemName = name;
-		_maxLife = 20f;
-		_life = _maxLife;
-		_owner = owner;
 
 		state = STATE.ON_GROUND;
 	}
 
+	public void SetOwner(Man owner) {
+		_owner = owner;
+		state = STATE.IN_HAND;
+
+		// hide
+		gameObject.GetComponent<Collider2D>().isTrigger = true;
+		gameObject.transform.position = new Vector3(0f, 0f, -100f);
+	}
+
+	// ! could activate only when in hand!
 	public abstract void Use();
 
-	public void Update() {
-		
+	public virtual void Update() {
 		// has risk to disappear when laid on the grounds
 		if (state == STATE.ON_GROUND || state == STATE.ABOUT_TO_DISAPPER) {
 			_life -= Time.deltaTime;
@@ -54,8 +57,9 @@ public abstract class Item : MonoBehaviour {
 		}
 	}
 
-	protected void End() {
-		Destroy(this);
+	// call base.End() at last to destroy the item
+	protected virtual void End() {
+		Destroy(this.gameObject);
 	}
 
 }

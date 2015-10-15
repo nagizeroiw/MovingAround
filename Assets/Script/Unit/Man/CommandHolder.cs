@@ -8,6 +8,7 @@ public class CommandHolder {
 		MOVE_DOWN,
 		MOVE_RIGHT,
 		MOVE_LEFT,
+		USE_ITEM,
 		SKILL_0, // DASH
 		SKILL_1 // MAGNET
 	}
@@ -16,6 +17,7 @@ public class CommandHolder {
 		COMMAND.MOVE_DOWN,
 		COMMAND.MOVE_RIGHT,
 		COMMAND.MOVE_LEFT,
+		COMMAND.USE_ITEM,
 		COMMAND.SKILL_0, // DASH
 		COMMAND.SKILL_1 // MAGNET};
 	};
@@ -65,6 +67,13 @@ public class CommandHolder {
 			dx = -1;
 
 		return new Vector2(dx, dy);
+	}
+
+	public bool GetItemCmd() {
+		if (HasCommand(COMMAND.USE_ITEM))
+			return true;
+		else
+			return false;
 	}
 
 	// will clear the command when asked

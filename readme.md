@@ -6,6 +6,8 @@ A football simulation game written by nagizero (398607 at github) on Unity. In t
 
 Two skills are learnt by both players. "Dash" will multipy your speed limit by 2 for 5 seconds, and "Magnet" will create a solid magnet on the ground in front of you, which has a strong attraction for the ball.
 
+Since ver 1.1.2, players can pick up items on the ground and use them.
+
 ## Controls
 
 ### Player 1:
@@ -13,14 +15,21 @@ Two skills are learnt by both players. "Dash" will multipy your speed limit by 2
 - move: axis keys
 - Dash: comma(',')
 - Magnet: period('.')
+- Use Item: Slash('/')
 
 ### Player 2:
 
 - move: WASD
 - Dash: 1 (above alphabet keys)
 - Magnet: 2 (above alphabet keys)
+- Use Item: 3 (above alphabet keys)
 
 ## Update log
+
+### ver 1.1.2
+
+- The first Item of the game: "Medicine"! Along with abstarct class TimeEffectItem and Item builded for developers.
+- Dash Property changed.
 
 ### ver 1.1.1
 

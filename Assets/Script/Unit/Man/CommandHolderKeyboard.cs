@@ -15,6 +15,8 @@ public class CommandHolderKeyboard : CommandHolder {
 											 new KeyCode[] { KeyCode.Comma, KeyCode.Period  }, // player 1
 											 new KeyCode[] { KeyCode.Alpha1, KeyCode.Alpha2 }}; // player 2
 
+	private static KeyCode[] useItem = { KeyCode.P, KeyCode.Slash, KeyCode.Alpha3 };
+
 	private static COMMAND[] skillCommands = { COMMAND.SKILL_0, COMMAND.SKILL_1 };
 
 
@@ -44,6 +46,11 @@ public class CommandHolderKeyboard : CommandHolder {
 		if (Input.GetKey(skillTile[_number][1])) {
 			// activate
 			GiveCommand(skillCommands[1]);
+		}
+
+		// use item
+		if (Input.GetKey(useItem[_number])) {
+			GiveCommand(COMMAND.USE_ITEM);
 		}
 	}
 }
