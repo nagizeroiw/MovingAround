@@ -4,21 +4,25 @@ using System.Collections;
 
 public class Man : MonoBehaviour {
 
+	// proporty
 	public float maxV = 8f;
+	[HideInInspector]
 	public float A = 30f;
 	public int number;
+	[HideInInspector]
+	public float health = 100f;
+	[HideInInspector]
+	public float energy = 100f;
 
+	// other components
 	private Animator animator;
-	
 	private Rigidbody2D rb2D;
-	
 	private Text myTextBoard;
 	private static string[] textBoardName = { "", "Dash1", "Dash2" };
 	
+	// modules
 	private Skill[] skills;
-
 	private Item item;
-
 	private CommandHolder cmdHolder;
 
 	private enum STATE {
